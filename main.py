@@ -1,103 +1,104 @@
 def affiche_grille(grid):
-    """take as a parameter a 3X3 matrice and print it in console"""
+    """take as a parameter a 3X3 matrice, print it in console"""
     nb_to_symbole = [" ", "x", "o"]
     for i in range(3):
         line = " "
         for j in range(3):
-            line = ligne + str(nb_to_symbole[grid[i][j]]) + " "
+            line = line + str(nb_to_symbole[grid[i][j]]) + " "
         print(line)
 
-def grille_pleine(grid):
-    """take as a parameter a 3X3 matrice and return True if full or False if not"""
+def full_grid(grid):
+    """take as a parameter a 3X3 matrice, return True if full or False if not"""
     for i in range(3):
         for j in range(3):
             if grid[i][j] == 0:
                 return False
     return True
 
-def fin_de_jeu(grille):
-    """prend en paramètre une matrice 3×3  grille et qui renvoie True si un joueur a gagné et False sinon"""
-    #vérifie pour les 3 lignes si elles sont remplis par le même symbole
+def end_of_game(grid):
+    """take as a parameter a 3X3 matrice, return True if a player have won and False if not"""
+    # check for all 3 lines, to see if they are fill with the same symbol
     for i in range(3):  
-        gagne = False
-        compare = []    #stocke 3 valeur dans une liste avant de les comparer
+        won = False
+        compare = []    # put 3 value in a list before comparing them
         for j in range(3):
-            compare.append(grille[i][j])
-        gagne =  compare[0] == compare[1] == compare[2] != 0
-        if gagne:
+            compare.append(grid[i][j])
+        won =  compare[0] == compare[1] == compare[2] != 0
+        if won:
             return True
             
-    #vérifie pour les 3 colonnes si elles sont remplis par le même symbole
+    # check for all 3 columns, to see if they are fill with the same symbol
     for i in range(3):
         compare = []
         for j in range(3):
-            compare.append(grille[j][i])
-        gagne =  compare[0] == compare[1] == compare[2] != 0
-        if gagne:
+            compare.append(grid[j][i])
+        won =  compare[0] == compare[1] == compare[2] != 0
+        if won:
             return True
     
-    #vérifie pour la première diagonale si elles est remplis par le même symbole
+    # check the first diagonal, to see if it is are fill with the same symbol
     compare = []
     for i in range (3):
-        compare.append(grille[i][i])
-    gagne =  compare[0] == compare[1] == compare[2] != 0
-    if gagne:
+        compare.append(grid[i][i])
+    won =  compare[0] == compare[1] == compare[2] != 0
+    if won:
         return True
     
-    #vérifie pour la première diagonale si elles est remplis par le même symbole
+    # check the first diagonal, to see if it is are fill with the same symbol
     compare = []
     for i in range(3):
-        compare.append(grille[i][2-i])
-    gagne =  compare[0] == compare[1] == compare[2] != 0
-    if gagne:
+        compare.append(grid[i][2-i])
+    won =  compare[0] == compare[1] == compare[2] != 0
+    if won:
         return True
     
-    #Si aucune condition n'est remplie, renvoie False
+    # If none of the conditions are fullfill, return False
     return False
 
-def coup_joueur(grille, num_joueur):
-    """prend en paramètre une matrice 3×3  grille et un entier num_joueur qui fait joueur le joueur num_joueur"""
-    assert type(num_joueur) == int, 'num_joueur doit être un entier'
+def play(grid, current_player):
+    """take as a parameter a 3X3 matrice and an integer current_player, make the current player play"""
+    assert type(current_player) == int, 'num_joueur doit être un entier'
     condition = True
     while condition:
-        y = int(input("Donnez la ligne dans laquelle vous voulez jouer : \n"))
-        assert (y==0) or (y==1) or (y==2)
-        x = int(input("Donnez la colonne dans laquelle vous voulez jouer : \n"))
-        assert (x==0) or (x==1) or (x==2), "Le chiffre doit être compris entre 1 et 3"
-        if grille[y][x] == 0:
-            grille[y][x]= num_joueur
+        y = int(input("Give the index of the line wich you want to play : \n"))
+        assert (y==0) or (y==1) or (y==2), "the index must be between 0 and 2"
+        x = int(input("Give the index of the column wich you want to play : \n"))
+        assert (x==0) or (x==1) or (x==2), "the index must be between 0 and 2"
+        if grid[y][x] == 0:
+            grid[y][x]= current_player
             condition = False
-    affiche_grille(grille)
+    affiche_grille(grid)
     
 
 
-
-grille_vide = [[0,0,0],
-               [0,0,0],
-               [0,0,0]]
-
-#tutoriel pour utiliser la bonne notation
-grille_remplie = [[0,1,2],
+# give the index of the board lines and columns
+example_grid = [[0,1,2],
                  [1,0,0],
                  [2,0,0]]
 for i in range(3):
-        ligne = " "
+        line = " "
         for j in range(3):
-            ligne = ligne + str(grille_remplie[i][j]) + " "
-        print(ligne)
-print("Joueur 1 : x\nJoueur 2 : o")
+            line = line + str(example_grid[i][j]) + " "
+        print(line)
+print("Player 1 : x\nPlayer 2 : o")
+
 
 condition = True
-num_joueur = 1
+current_player = 1
+empty_grid = [[0,0,0],
+               [0,0,0],
+               [0,0,0]]
+
+# main game loop
 while condition:
-    coup_joueur(grille_vide, num_joueur)
-    if grille_pleine(grille_vide):
-        print("La grille est pleine")
+    play(empty_grid, current_player)
+    if full_grid(empty_grid):
+        print("the grid is full")
         condition = False
-    elif fin_de_jeu(grille_vide):
-        print("joueur " + str(num_joueur) + " a gagné")
+    elif end_of_game(empty_grid):
+        print("player " + str(current_player) + " won")
         condition = False
-    if num_joueur == 1:
-        num_joueur = 2
+    if current_player == 1:
+        current_player = 2
     else:
-        num_joueur = 1
+        current_player = 1
